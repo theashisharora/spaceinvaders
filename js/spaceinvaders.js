@@ -675,11 +675,15 @@ PlayState.prototype.keyUp = function(game, keyCode) {
 
 PlayState.prototype.fireRocket = function() {
     if (this.lastRocketTime === null || ((new Date()).valueOf() - this.lastRocketTime) > (1000 / this.rocketMaxFireRate)) {
-        const randomWord = sanskritWords[Math.floor(Math.random() * sanskritWords.length)];
+        const wordList = game.rocketWords || translations[currentLanguage].rocketWords;
+        const randomWord = wordList[Math.floor(Math.random() * wordList.length)];
+
         this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity, randomWord));
+
         this.lastRocketTime = (new Date()).valueOf();
         game.sounds.playSound('shoot');
-        console.log('Assigned Rocket Word:', randomWord);
+
+        console.log(`🚀 Assigned Rocket Word: ${randomWord} (Language: ${currentLanguage})`);
     }
 };
 
