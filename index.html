@@ -3,7 +3,9 @@
     <head>
         <title>Space Invaders</title>
         <link rel="stylesheet" type="text/css" href="css/core.css">
-        <link rel="stylesheet" type="text/css" href="css/typeography.css">
+        <link rel="stylesheet" type="text/css" href="css/typeography.css">    
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400&display=swap" rel="stylesheet">
+   
         <style>
     
             /* Styling needed for a fullscreen canvas and no scrollbars. */
@@ -40,6 +42,9 @@
         </style>
     </head>
     <body>
+        <button id="languageToggle" style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+            Switch to Sanskrit
+        </button>
         <div id="starfield"></div>
         <div id="gamecontainer">
         <canvas id="gameCanvas"></canvas>
@@ -47,9 +52,9 @@
         <div id="info">
             <p>Move with arrow keys or swipe, fire with the space bar or touch. The invaders get faster and drop
                 more bombs as you complete each level!</p>
-            <p><a id="muteLink" href="#" onclick="toggleMute()">mute</a> | 
+            <!-- <p><a id="muteLink" href="#" o nclick="toggleMute()">mute</a> | 
                 <a href="http://github.com/dwmkerr/spaceinvaders">spaceinvaders on github</a> | 
-                <a href="http://github.com/dwmkerr">more projects</a> | <a href="http://www.dwmkerr.com">dwmkerr.com</a></p>
+                <a href="http://github.com/dwmkerr">more projects</a> | <a href="http://www.dwmkerr.com">dwmkerr.com</a></p>-->
         </div>
 
         <script src="js/starfield.js"></script>
@@ -121,5 +126,7 @@
   })();
 
 </script>
+<script src="js/convert.js"></script>
+
     </body>
 </html>

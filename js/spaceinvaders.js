@@ -26,6 +26,54 @@ var KEY_LEFT = 37;
 var KEY_RIGHT = 39;
 var KEY_SPACE = 32;
 
+const sanskritWords = [
+    '\u0915\u0930',  // कर
+    '\u0915\u0932',  // कल
+    '\u092A\u093E',  // पा
+    '\u0915\u0941',  // कु
+    '\u0915\u094D\u0937',  // क्ष
+    '\u0917\u094C',  // गौ
+    '\u091C\u0932',  // जल
+    '\u091C\u094D\u091E\u093E\u0928',  // ज्ञ
+    '\u0938\u0942\u0930\u094D\u092F',  // सूर्य
+    '\u091A\u0902\u0926\u094D\u0930',  // चंद्र
+    '\u0917\u0941\u0930\u0941',  // गुरु
+    '\u0935\u093F\u091C\u094D\u091E\u093E\u0928',  // विज्ञान
+    '\u092A\u0941\u0937\u094D\u091F\u0915',  // पुष्टक
+    '\u0938\u0902\u0917\u0940\u0924',  // संगीत
+    '\u092A\u094D\u0930\u0915\u093E\u0936',  // प्रकाश
+    '\u0936\u092C\u094D\u0926',  // शब्द
+    '\u0932\u094B\u0915',  // लोक
+    '\u092D\u093E\u0930\u0924',  // भारत
+    '\u0938\u0947\u0935\u093E',  // सेवा
+    '\u0938\u0941\u092D\u093E\u0937\u093F\u0924',  // सुधारित
+    '\u0928\u0940\u0924\u093F',  // नीति
+    '\u092E\u093E\u0924\u094D\u0930\u093E',  // मात्रा
+    '\u0938\u0902\u0915\u0943\u0924',  // संकृत
+    '\u0927\u093E\u0930\u094D\u092E',  // धर्म
+    '\u0915\u094D\u0937\u092E',  // क्षम
+    '\u091C\u0940\u0935\u0928',  // जीवन
+    '\u092E\u0928\u0941\u0937\u094D\u092F',  // मनुष्य
+    '\u0915\u094C\u0936\u0932\u094D\u092F',  // कौशल्य
+    '\u092E\u093E\u0930\u094D\u0917',  // मार्ग
+    '\u0938\u094D\u0924\u094D\u0930\u0940',  // स्त्री
+];
+
+const font = new FontFace(
+    'NotoSansDevanagari',
+    'url(./fonts/NotoSansDevanagari-Regular.ttf)'
+);
+
+font.load()
+    .then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        console.log('Font loaded successfully!');
+    })
+    .catch((error) => {
+        console.error('Failed to load font:', error);
+    });
+
+
 //  Creates an instance of the Game class.
 function Game() {
 
@@ -579,13 +627,14 @@ PlayState.prototype.draw = function(game, dt, ctx) {
         ctx.fillRect(bomb.x - 2, bomb.y - 2, 4, 4);
     }
 
-    //  Draw rockets.
-    ctx.fillStyle = '#ff0000';
-    for(var i=0; i<this.rockets.length; i++) {
+    ctx.font = '20px "Noto Sans Devanagari"';
+    ctx.fillStyle = '#ffffff';
+    for (var i = 0; i < this.rockets.length; i++) {
         var rocket = this.rockets[i];
-        ctx.fillRect(rocket.x, rocket.y - 2, 1, 4);
+        ctx.fillText(rocket.word, rocket.x, rocket.y);
     }
-
+    
+    
     //  Draw info.
     var textYpos = game.gameBounds.bottom + ((game.height - game.gameBounds.bottom) / 2) + 14/2;
     ctx.font="14px Arial";
@@ -625,18 +674,15 @@ PlayState.prototype.keyUp = function(game, keyCode) {
 };
 
 PlayState.prototype.fireRocket = function() {
-    //  If we have no last rocket time, or the last rocket time 
-    //  is older than the max rocket rate, we can fire.
-    if(this.lastRocketTime === null || ((new Date()).valueOf() - this.lastRocketTime) > (1000 / this.rocketMaxFireRate))
-    {   
-        //  Add a rocket.
-        this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity));
+    if (this.lastRocketTime === null || ((new Date()).valueOf() - this.lastRocketTime) > (1000 / this.rocketMaxFireRate)) {
+        const randomWord = sanskritWords[Math.floor(Math.random() * sanskritWords.length)];
+        this.rockets.push(new Rocket(this.ship.x, this.ship.y - 12, this.config.rocketVelocity, randomWord));
         this.lastRocketTime = (new Date()).valueOf();
-
-        //  Play the 'shoot' sound.
         game.sounds.playSound('shoot');
+        console.log('Assigned Rocket Word:', randomWord);
     }
 };
+
 
 function PauseState() {
 
@@ -731,12 +777,13 @@ function Ship(x, y) {
     Fired by the ship, they've got a position, velocity and state.
 
     */
-function Rocket(x, y, velocity) {
-    this.x = x;
-    this.y = y;
-    this.velocity = velocity;
-}
-
+    function Rocket(x, y, velocity, word) {
+        this.x = x;
+        this.y = y;
+        this.velocity = velocity;
+        this.word = word || '';
+    }
+    
 /*
     Bomb
 
