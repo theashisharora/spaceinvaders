@@ -77,6 +77,8 @@ font.load()
 //  Creates an instance of the Game class.
 function Game() {
 
+    this.rocketWords = translations[currentLanguage].rocketWords; // Initialize with default language
+
     //  Set the initial config.
     this.config = {
         bombRate: 0.05,
